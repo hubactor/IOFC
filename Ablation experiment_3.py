@@ -46,13 +46,6 @@ def Interconnection(per_centroid1, per_centroid2, data):
         Join1, Join2 = per_centroid1.copy(), per_centroid2.copy()
     return Join1, Join2
 
-def Perturbation(per_centroid, data):
-    for i in range(data.shape[1]):
-        q = np.random.rand()
-        if q < Perturbation_prob:
-            per_centroid[i] += np.random.normal(0, 0.1)
-    return per_centroid
-
 def init_cluster(data, k):
     centroid = select_centroid(data, k)
     for iter in range(max_iter_1):
@@ -83,8 +76,6 @@ def init_cluster(data, k):
         while len(new_centroid) < length:
             old_centroid_index = np.random.choice(len(max_ph_centroid), size=2, replace=False)
             c1, c2 = Interconnection(max_ph_centroid[old_centroid_index[0]], max_ph_centroid[old_centroid_index[1]], data)
-            c1 = Perturbation(c1, data)
-            c2 = Perturbation(c2, data)
             new_centroid.extend([c1, c2])
         new_centroid.extend(min_ph_centroid)
         new_centroid = np.array(new_centroid)

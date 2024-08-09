@@ -1,41 +1,12 @@
 import numpy as np
-from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
 import random
+
 
 max_iter_1 = 100
 fit_max = 1
 fit_min = -1
-# Probability of generating interconnection and perturbation
 Interconnection_prob = random.random()
 Perturbation_prob = random.random()
-# KNN函数
-def KNN(data, k):
-    knn_model = NearestNeighbors(n_neighbors=2 * k + 1)
-    knn_model.fit(data)
-    distances, indices = knn_model.kneighbors(data)
-    return distances, indices
-
-
-# RNN函数
-def RNN(data, indices):
-    rnn = {}
-    for i in range(len(data)):
-        rnn[i] = set()
-    for i, neighbors in enumerate(indices):
-        for neighbor in neighbors[1:]:
-            rnn[neighbor].add(i)
-    return rnn
-
-def select_centroid(data, k):
-    distance, indice = KNN(data, k)
-    receive_rnn = RNN(data, indice)
-    centers = []
-    for index, neighbors in receive_rnn.items():
-        local_density = len(neighbors)
-        centers.append(local_density)
-    select_center = np.argsort(centers)[-k:]
-    return data[select_center]
-
 def Interconnection(per_centroid1, per_centroid2, data):
     p_rand = np.random.rand()
     if p_rand < Interconnection_prob:
@@ -54,7 +25,10 @@ def Perturbation(per_centroid, data):
     return per_centroid
 
 def init_cluster(data, k):
-    centroid = select_centroid(data, k)
+    n = data.shape[0]
+    # centroid = select_centroid(data, k)
+    centroid_index = np.random.choice(n, size=k, replace=False)
+    centroid = data[centroid_index]
     for iter in range(max_iter_1):
         compactness_all = np.zeros(k)
         init_label = np.zeros(data.shape[0])
@@ -98,7 +72,3 @@ def init_cluster(data, k):
         if np.sum((pre_centroid - centroid) ** 2) <= 0.001:
             break
     return init_label
-
-
-
-
