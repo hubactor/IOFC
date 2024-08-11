@@ -8,7 +8,6 @@ fit_min = -1
 # Probability of generating interconnection and perturbation
 Interconnection_prob = random.random()
 Perturbation_prob = random.random()
-# KNN函数
 def KNN(data, k):
     knn_model = NearestNeighbors(n_neighbors=2 * k + 1)
     knn_model.fit(data)
@@ -16,7 +15,6 @@ def KNN(data, k):
     return distances, indices
 
 
-# RNN函数
 def RNN(data, indices):
     rnn = {}
     for i in range(len(data)):
